@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:body>
+  <div id="container">
+    <h1>websphere-multipart-problem</h1>
+
+    <h:messages id="messages" showDetail="true" showSummary="false"/>
+
+    <h2>Welcome to this test page.</h2>
+
+    <ol>
+      <li>To test, realize the textarea has a content of "a", "b", "c" where the characters are separated
+        by carriage return new line.</li>
+      <li>Click "submit".</li>
+      <li>Check the result: The value of "form:textarea" should be "a", "b", "c" where the characters are separated
+        by carriage return new line.</li>
+      <li>In case of WebSphere there are no carriage return new lines.</li>
+      <li>Easier to compare: Look at the next field with the hex view:<br/>
+        When you see "61 62 63 " in the hex view, like in WebSphere there is a problem.<br/>
+        When you see "61 0d 0a 62 0d 0a 63 " in the hex view, everything is okay.
+      </li>
+    </ol>
+
+    The problem is detected in WAS 8.5.5.13, 9.0.0.7 and Liberty.
+
+    <h:form id="form" enctype="multipart/form-data">
+      <!--<h:form>-->
+      <hr/>
+      <h4>Input:</h4>
+      <h:inputTextarea id="textarea" rows="5" cols="80" value="#{bean.text}"/>
+      <h:commandButton id="submit" value="Submit" action="#{bean.action}"/>
+      <hr/>
+      <h4>All parameters of the request:</h4>
+      <pre style="border: 1px solid black">
+      <h:outputText id="parameter" value="#{bean.parameter}"/>
+      </pre>
+      <hr/>
+      <h4>Value of parameter 'form:textarea' in hex view:</h4>
+      <pre style="border: 1px solid black">
+      <h:outputText id="hex" value="#{bean.hex}"/>
+      </pre>
+    </h:form>
+    <hr/>
+    <h4>Relevant parts of ASCII:</h4>
+    <table border="1">
+      <tr>
+        <th>Hex</th>
+        <th>Meaning</th>
+      </tr>
+      <tr>
+        <td>0a</td>
+        <td>line feed = '\n'</td>
+      </tr>
+      <tr>
+        <td>0d</td>
+        <td>carriage return = '\r'</td>
+      </tr>
+      <tr>
+        <td>61</td>
+        <td>character 'a'</td>
+      </tr>
+      <tr>
+        <td>62</td>
+        <td>character 'b'</td>
+      </tr>
+      <tr>
+        <td>63</td>
+        <td>character 'c'</td>
+      </tr>
+    </table>
+  </div>
+</h:body>
+</html>
